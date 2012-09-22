@@ -20,8 +20,6 @@ module Route53
       @options.quiet = false
     end
 
-    #Skeleton obtained from http://blog.toddwerth.com/entries/show/5 and modified
-    
     # Parse options, check arguments, then process the command
     def run
       if parsed_options? && arguments_valid? 

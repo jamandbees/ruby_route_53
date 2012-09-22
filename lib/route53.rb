@@ -32,22 +32,26 @@ module Route53
       puts "URL: #{url}" if @verbose
       puts "Type: #{type}" if @verbose
       puts "Req: #{data}" if type != "GET" && @verbose
+      
       uri = URI(url)
+      
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true if uri.scheme == "https"
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE if RUBY_VERSION.start_with?("1.8")
+
       time = get_date
+      
       hmac = HMAC::SHA256.new(@secret)
       hmac.update(time)
       signature = Base64.encode64(hmac.digest).chomp
+      
       headers = {
         'Date' => time,
         'X-Amzn-Authorization' => "AWS3-HTTPS AWSAccessKeyId=#{@accesskey},Algorithm=HmacSHA256,Signature=#{signature}",
         'Content-Type' => 'text/xml; charset=UTF-8'
       }
       resp = http.send_request(type,uri.path+"?"+(uri.query.nil? ? "" : uri.query),data,headers)
-      #puts "Resp:"+resp.to_s if @verbose
-      #puts "RespBody: #{resp.body}" if @verbose
+      
       return AWSResponse.new(resp.body,self)
     end
     
