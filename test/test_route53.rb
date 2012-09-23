@@ -4,11 +4,11 @@ require_relative "../lib/route53"
 
 class TestConnection < MiniTest::Unit::TestCase
 
-    def setup
-        @connection = Route53::Connection.new 1, 1
-    end
+  ACCESSKEY = 1
+  SECRET = 1
 
-	def test_get_date
-		assert @connection.get_date
-	end
+  def setup
+    @connection = Route53::Connection.new ACCESSKEY, SECRET
+  end
+
 end
